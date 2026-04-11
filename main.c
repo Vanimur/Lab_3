@@ -87,6 +87,54 @@ void set_bit_0(unsigned char *vec, size_t len, size_t k){
 }
 
 
+unsigned char *logMul(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
+    if (vecA == NULL || vecB == NULL) return NULL;
+    if (lenA != lenB) return NULL;
+
+    size_t cells = (lenA + 7) / 8;
+
+    unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
+    if (result == NULL) return NULL;
+
+    for (size_t i = 0; i < cells; i++){
+        result[i] = vecA[i] & vecB[i];
+    }
+    return result;
+}
+
+
+unsigned char *logSub(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
+    if (vecA == NULL || vecB == NULL) return NULL;
+    if (lenA != lenB) return NULL;
+
+    size_t cells = (lenA + 7) / 8;
+
+    unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
+    if (result == NULL) return NULL;
+
+    for (size_t i = 0; i < cells; i++){
+        result[i] = vecA[i] | vecB[i];
+    }
+    return result;
+}
+
+
+unsigned char *logXor(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
+    if (vecA == NULL || vecB == NULL) return NULL;
+    if (lenA != lenB) return NULL;
+
+    size_t cells = (lenA + 7) / 8;
+
+    unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
+    if (result == NULL) return NULL;
+
+    for (size_t i = 0; i < cells; i++){
+        result[i] = vecA[i] ^ vecB[i];
+    }
+    return result;
+}
+
+
 int main()
 {
     char str[20] = "";
