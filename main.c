@@ -135,6 +135,29 @@ unsigned char *logXor(unsigned char *vecA, size_t lenA, unsigned char *vecB, siz
 }
 
 
+unsigned char *logNot(unsigned char *vec, size_t len){
+    if (vec == NULL) return NULL;
+
+    size_t cells = (len + 7) / 8;
+
+    unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
+    if (result == NULL) return NULL;
+
+    for (size_t i = 0; i < cells; i++){
+        result[i] = ~vec[i];
+    }
+
+    size_t tail_bit = len % 8;
+    if (tail_bit != 0){
+        unsigned char mask = 1;
+        mask = (mask << tail_bit) - 1;
+        result[cells - 1] = result[cells - 1] & mask;
+    }
+
+    return result;
+}
+
+
 int main()
 {
     char str[20] = "";
