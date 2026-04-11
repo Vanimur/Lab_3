@@ -31,6 +31,7 @@ unsigned char *convertStrToLongBv(char *str, size_t *cells){
     return vec;
 }
 
+
 unsigned char *convertLongBvToStr(unsigned char *vec, size_t sz){
     size_t ix = 0;
     if (vec == NULL) return NULL;
@@ -53,6 +54,36 @@ unsigned char *convertLongBvToStr(unsigned char *vec, size_t sz){
         }
     }
     return str;
+}
+
+
+void set_bit_1(unsigned char *vec, size_t len, size_t k){
+    size_t byte = 0, bit =0;
+    unsigned char mask = 1;
+
+    if (k >= len) return;
+
+    byte = k / 8;
+    bit = k % 8;
+
+    mask = mask << bit;
+
+    vec[byte] = vec[byte] | mask;
+}
+
+
+void set_bit_0(unsigned char *vec, size_t len, size_t k){
+    size_t byte = 0, bit =0;
+    unsigned char mask = 1;
+
+    if (k >= len) return;
+
+    byte = k / 8;
+    bit = k % 8;
+
+    mask = ~(mask << bit);
+
+    vec[byte] = vec[byte] & mask;
 }
 
 
