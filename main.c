@@ -231,6 +231,25 @@ unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t n) {
     return result;
 }
 
+
+void print_vec(unsigned char *vec, size_t len) {
+    if (vec == NULL) return;
+    size_t ix = 0;
+    size_t cells = (len + 7) / 8;
+    for (size_t i = 0; i < cells; i++){
+        unsigned char mask = 1;
+        for (int j = 0; (j < 8) && (ix < len); j++){
+            if ((vec[i] & mask) != 0)
+                printf("1");
+            else
+                printf("0");
+            mask = mask << 1;
+            ix++;
+        }
+    }
+    printf("\n");
+}
+
 int main()
 {
 
@@ -308,6 +327,35 @@ int main()
       Not = NULL;
       free(str_vector);
       str_vector = NULL;
+    }
+
+    //        Сдвиги
+    {
+      char str[20] = "111111111";
+      size_t vector_cells;
+      size_t bit_len = strlen(str);
+
+      unsigned char *vector = convertStrToLongBv(str, &vector_cells);
+      unsigned char *left_shift = log_Shift_Left(vector, bit_len, 5);
+      printf("Base left shift: ");
+      print_vec(left_shift, bit_len);
+
+      unsigned char *right_shift = log_Shift_Right(vector, bit_len, 5);
+      printf("Base right shift: ", right_shift);
+      print_vec(right_shift, bit_len);
+
+      vector = log_Not(vector, bit_len);
+      vector = log_Shift_Left(vector, bit_len, 8);
+      printf("Not + left shift: ");
+      print_vec(vector, bit_len);
+
+
+      free(vector);
+      vector = NULL;
+      free(left_shift);
+      left_shift = NULL;
+      free(right_shift);
+      right_shift = NULL;
     }
     return 0;
 }
