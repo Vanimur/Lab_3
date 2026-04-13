@@ -32,17 +32,17 @@ unsigned char *convertStrToLongBv(char *str, size_t *cells){
 }
 
 
-unsigned char *convertLongBvToStr(unsigned char *vec, size_t sz){
+unsigned char *convertLongBvToStr(unsigned char *vec, size_t cells){
     size_t ix = 0;
     if (vec == NULL) return NULL;
 
-    if (sz == 0) {
+    if (cells == 0) {
         return NULL;
     }
 
-    size_t len = 8 * sz + 1;
+    size_t len = 8 * cells + 1;
     unsigned char *str = (unsigned char*)calloc(len, sizeof(unsigned char));
-    for (size_t i = 0; i < sz; i++){
+    for (size_t i = 0; i < cells; i++){
         unsigned char mask = 1;
         for (int j = 0; (j < 8) && (ix < len); j++){
             if ((vec[i] & mask) != 0)
@@ -147,10 +147,47 @@ unsigned char *logNot(unsigned char *vec, size_t len){
         result[i] = ~vec[i];
     }
 
-    size_t tail_bit = len % 8;
-    if (tail_bit != 0){
+    size_t xvost_bit = len % 8;
+    if (xvost_bit != 0){
         unsigned char mask = 1;
-        mask = (mask << tail_bit) - 1;
+        mask = (mask << xvost_bit) - 1;
+        result[cells - 1] = result[cells - 1] & mask;
+    }
+
+    return result;
+}
+
+
+unsigned char *logShiftLeft(unsigned char *vec, size_t len, size_t n) {
+    if (vec == NULL) return NULL;
+
+    size_t cells = (len + 7) / 8;
+    unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
+    if (result == NULL) return NULL;
+
+    if (n >= len) return result;
+
+    size_t byte_shift = n / 8;
+    size_t bit_shift = n % 8;
+
+    for (size_t i = 0; i < cells; i++) {
+        unsigned char current = 0;
+
+        if (i + byte_shift < cells) {
+            current = vec[i + byte_shift] >> bit_shift;
+        }
+
+        if (bit_shift > 0 && (i + byte_shift + 1 < cells)) {
+            unsigned char transfer = vec[i + byte_shift + 1] << (8 - bit_shift);
+            current = current | transfer;
+        }
+
+        result[i] = current;
+    }
+
+    size_t xvost_bit = len % 8;
+    if (xvost_bit != 0) {
+        unsigned char mask = (1 << xvost_bit) - 1;
         result[cells - 1] = result[cells - 1] & mask;
     }
 
@@ -160,15 +197,19 @@ unsigned char *logNot(unsigned char *vec, size_t len){
 
 int main()
 {
-    char str[20] = "";
+    char str[20] = "1111111111";
     size_t vector_cells;
     unsigned char *vector = convertStrToLongBv(str, &vector_cells);
-    unsigned char *str_vector = convertLongBvToStr(vector, vector_cells);
-    printf("%.*s", ((vector_cells + 7) / 8), str_vector);
+    unsigned char *sdvig = logShiftLeft(vector, strlen(str), 1);
+    set_bit_0(sdvig, strlen(str), 3);
+    unsigned char *str_vector = convertLongBvToStr(sdvig, vector_cells);
+    printf("%s", str_vector);
 
     free(vector);
     vector = NULL;
     free(str_vector);
     str_vector = NULL;
+    free(sdvig);
+    sdvig = NULL;
     return 0;
 }
