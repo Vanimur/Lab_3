@@ -87,7 +87,7 @@ void set_bit_0(unsigned char *vec, size_t len, size_t k){
 }
 
 
-unsigned char *logMul(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
+unsigned char *log_Mul(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
     if (vecA == NULL || vecB == NULL) return NULL;
     if (lenA != lenB) return NULL;
 
@@ -103,7 +103,7 @@ unsigned char *logMul(unsigned char *vecA, size_t lenA, unsigned char *vecB, siz
 }
 
 
-unsigned char *logSub(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
+unsigned char *log_Sub(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
     if (vecA == NULL || vecB == NULL) return NULL;
     if (lenA != lenB) return NULL;
 
@@ -119,7 +119,7 @@ unsigned char *logSub(unsigned char *vecA, size_t lenA, unsigned char *vecB, siz
 }
 
 
-unsigned char *logXor(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
+unsigned char *log_Xor(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
     if (vecA == NULL || vecB == NULL) return NULL;
     if (lenA != lenB) return NULL;
 
@@ -135,7 +135,7 @@ unsigned char *logXor(unsigned char *vecA, size_t lenA, unsigned char *vecB, siz
 }
 
 
-unsigned char *logNot(unsigned char *vec, size_t len){
+unsigned char *log_Not(unsigned char *vec, size_t len){
     if (vec == NULL) return NULL;
 
     size_t cells = (len + 7) / 8;
@@ -158,7 +158,7 @@ unsigned char *logNot(unsigned char *vec, size_t len){
 }
 
 
-unsigned char *logShiftLeft(unsigned char *vec, size_t len, size_t n) {
+unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
     if (vec == NULL) return NULL;
 
     size_t cells = (len + 7) / 8;
@@ -195,7 +195,7 @@ unsigned char *logShiftLeft(unsigned char *vec, size_t len, size_t n) {
 }
 
 
-unsigned char *logShiftRight(unsigned char *vec, size_t len, size_t n) {
+unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t n) {
     if (vec == NULL) return NULL;
 
     size_t cells = (len + 7) / 8;
@@ -233,20 +233,81 @@ unsigned char *logShiftRight(unsigned char *vec, size_t len, size_t n) {
 
 int main()
 {
-    char str[20] = "1111111111";
-    size_t vector_cells;
-    unsigned char *vector = convertStrToLongBv(str, &vector_cells);
-    //unsigned char *sdvig ="%s" logShiftLeft(vector, strlen(str), 1);
-    unsigned char *sdvig = logShiftRight(vector, strlen(str), 0);
-    set_bit_0(sdvig, strlen(str), 3);
-    unsigned char *str_vector = convertLongBvToStr(sdvig, vector_cells);
-    printf("%s", str_vector);
 
-    free(vector);
-    vector = NULL;
-    free(str_vector);
-    str_vector = NULL;
-    free(sdvig);
-    sdvig = NULL;
+    //    Установка битов
+    {
+      char str[20] = "1111111111";
+      size_t vector_cells;
+      size_t bit_len = strlen(str);
+
+      unsigned char *vector = convertStrToLongBv(str, &vector_cells);
+      set_bit_1(vector, bit_len, 3);
+      //set_bit_0(vector, bit_len, 3);
+      unsigned char *str_vector = convertLongBvToStr(vector, vector_cells);
+      printf("Set_bit: %s\n", str_vector);
+
+      free(vector);
+      vector = NULL;
+      free(str_vector);
+      str_vector = NULL;
+    }
+
+    //        Сложение / Умножение / XOR
+    {
+      char strA[20] = "10101001";
+      char strB[20] = "01010101";
+      size_t vecA_cells;
+      size_t vecB_cells;
+      size_t bit_lenA = strlen(strA);
+      size_t bit_lenB = strlen(strB);
+
+      unsigned char *vecA = convertStrToLongBv(strA, &vecA_cells);
+      unsigned char *vecB = convertStrToLongBv(strB, &vecB_cells);
+
+      unsigned char *Sub = log_Sub(vecA, bit_lenA, vecB, bit_lenB);
+      unsigned char *str_vector = convertLongBvToStr(Sub, vecA_cells);
+      printf("Sub: %s\n", str_vector);
+
+      unsigned char *Mul = log_Mul(vecA, bit_lenA, vecB, bit_lenB);
+      str_vector = convertLongBvToStr(Mul, vecA_cells);
+      printf("Mul: %s\n", str_vector);
+
+      unsigned char *XOR = log_Xor(vecA, bit_lenA, vecB, bit_lenB);
+      str_vector = convertLongBvToStr(XOR, vecA_cells);
+      printf("XOR: %s\n", str_vector);
+
+      free(vecA);
+      free(vecB);
+      vecA = NULL;
+      vecB = NULL;
+      free(Sub);
+      free(Mul);
+      free(XOR);
+      XOR = NULL;
+      Sub = NULL;
+      Mul = NULL;
+
+      free(str_vector);
+      str_vector = NULL;
+    }
+
+    //      Отрицание NOT
+    {
+      char str[20] = "111111111";
+      size_t vector_cells;
+      size_t bit_len = strlen(str);
+
+      unsigned char *vector = convertStrToLongBv(str, &vector_cells);
+      unsigned char *Not = log_Not(vector, bit_len);
+      unsigned char *str_vector = convertLongBvToStr(Not, vector_cells);
+      printf("Not: %s\n", str_vector);
+
+      free(vector);
+      vector = NULL;
+      free(Not);
+      Not = NULL;
+      free(str_vector);
+      str_vector = NULL;
+    }
     return 0;
 }
