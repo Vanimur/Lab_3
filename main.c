@@ -195,12 +195,49 @@ unsigned char *logShiftLeft(unsigned char *vec, size_t len, size_t n) {
 }
 
 
+unsigned char *logShiftRight(unsigned char *vec, size_t len, size_t n) {
+    if (vec == NULL) return NULL;
+
+    size_t cells = (len + 7) / 8;
+    unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
+    if (result == NULL) return NULL;
+
+    if (n >= len) return result;
+
+    size_t byte_shift = n / 8;
+    size_t bit_shift = n % 8;
+
+    for (size_t i = cells - 1; i < cells; i--) {
+        unsigned char current = 0;
+
+        if (i >= byte_shift) {
+            current = vec[i - byte_shift] << bit_shift;
+        }
+
+        if (bit_shift > 0 && (i > byte_shift)) {
+            unsigned char transfer = vec[i - byte_shift - 1] >> (8 - bit_shift);
+            current = current | transfer;
+        }
+
+        result[i] = current;
+    }
+
+    size_t xvost_bit = len % 8;
+    if (xvost_bit != 0) {
+        unsigned char mask = (1 << xvost_bit) - 1;
+        result[cells - 1] = result[cells - 1] & mask;
+    }
+
+    return result;
+}
+
 int main()
 {
     char str[20] = "1111111111";
     size_t vector_cells;
     unsigned char *vector = convertStrToLongBv(str, &vector_cells);
-    unsigned char *sdvig = logShiftLeft(vector, strlen(str), 1);
+    //unsigned char *sdvig ="%s" logShiftLeft(vector, strlen(str), 1);
+    unsigned char *sdvig = logShiftRight(vector, strlen(str), 0);
     set_bit_0(sdvig, strlen(str), 3);
     unsigned char *str_vector = convertLongBvToStr(sdvig, vector_cells);
     printf("%s", str_vector);
