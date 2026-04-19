@@ -90,6 +90,7 @@ void set_bit_0(unsigned char *vec, size_t len, size_t k){
 unsigned char *log_Mul(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
     if (vecA == NULL || vecB == NULL) return NULL;
     if (lenA != lenB) return NULL;
+    if (lenA == 0) return NULL;
 
     size_t cells = (lenA + 7) / 8;
 
@@ -106,6 +107,7 @@ unsigned char *log_Mul(unsigned char *vecA, size_t lenA, unsigned char *vecB, si
 unsigned char *log_Sub(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
     if (vecA == NULL || vecB == NULL) return NULL;
     if (lenA != lenB) return NULL;
+    if (lenA == 0) return NULL;
 
     size_t cells = (lenA + 7) / 8;
 
@@ -122,6 +124,7 @@ unsigned char *log_Sub(unsigned char *vecA, size_t lenA, unsigned char *vecB, si
 unsigned char *log_Xor(unsigned char *vecA, size_t lenA, unsigned char *vecB, size_t lenB){
     if (vecA == NULL || vecB == NULL) return NULL;
     if (lenA != lenB) return NULL;
+    if (lenA == 0) return NULL;
 
     size_t cells = (lenA + 7) / 8;
 
@@ -137,6 +140,7 @@ unsigned char *log_Xor(unsigned char *vecA, size_t lenA, unsigned char *vecB, si
 
 unsigned char *log_Not(unsigned char *vec, size_t len){
     if (vec == NULL) return NULL;
+    if (len == 0) return NULL;
 
     size_t cells = (len + 7) / 8;
 
@@ -160,6 +164,7 @@ unsigned char *log_Not(unsigned char *vec, size_t len){
 
 unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
     if (vec == NULL) return NULL;
+    if (len == 0) return NULL;
 
     size_t cells = (len + 7) / 8;
     unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
@@ -197,6 +202,7 @@ unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
 
 unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t n) {
     if (vec == NULL) return NULL;
+    if (len == 0) return NULL;
 
     size_t cells = (len + 7) / 8;
     unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
