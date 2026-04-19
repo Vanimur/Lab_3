@@ -153,8 +153,8 @@ unsigned char *log_Not(unsigned char *vec, size_t len){
 
     size_t xvost_bit = len % 8;
     if (xvost_bit != 0){
-        unsigned char mask = 1;
-        mask = (mask << xvost_bit) - 1;
+        unsigned char mask = -1;
+        mask = (mask >> (8 - xvost_bit));
         result[cells - 1] = result[cells - 1] & mask;
     }
 
@@ -162,7 +162,7 @@ unsigned char *log_Not(unsigned char *vec, size_t len){
 }
 
 
-unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
+unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t k) {
     if (vec == NULL) return NULL;
     if (len == 0) return NULL;
 
@@ -170,10 +170,10 @@ unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
     unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
     if (result == NULL) return NULL;
 
-    if (n >= len) return result;
+    if (k >= len) return result;
 
-    size_t byte_shift = n / 8;
-    size_t bit_shift = n % 8;
+    size_t byte_shift = k / 8;
+    size_t bit_shift = k % 8;
 
     for (size_t i = 0; i < cells; i++) {
         unsigned char current = 0;
@@ -192,7 +192,8 @@ unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
 
     size_t xvost_bit = len % 8;
     if (xvost_bit != 0) {
-        unsigned char mask = (1 << xvost_bit) - 1;
+        unsigned char mask = -1;
+        mask = (mask >> (8 - xvost_bit));
         result[cells - 1] = result[cells - 1] & mask;
     }
 
@@ -200,7 +201,7 @@ unsigned char *log_Shift_Left(unsigned char *vec, size_t len, size_t n) {
 }
 
 
-unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t n) {
+unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t k) {
     if (vec == NULL) return NULL;
     if (len == 0) return NULL;
 
@@ -208,10 +209,10 @@ unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t n) {
     unsigned char *result = (unsigned char*)calloc(cells, sizeof(unsigned char));
     if (result == NULL) return NULL;
 
-    if (n >= len) return result;
+    if (k >= len) return result;
 
-    size_t byte_shift = n / 8;
-    size_t bit_shift = n % 8;
+    size_t byte_shift = k / 8;
+    size_t bit_shift = k % 8;
 
     for (size_t i = cells - 1; i < cells; i--) {
         unsigned char current = 0;
@@ -230,7 +231,8 @@ unsigned char *log_Shift_Right(unsigned char *vec, size_t len, size_t n) {
 
     size_t xvost_bit = len % 8;
     if (xvost_bit != 0) {
-        unsigned char mask = (1 << xvost_bit) - 1;
+        unsigned char mask = -1;
+        mask = (mask >> (8 - xvost_bit));
         result[cells - 1] = result[cells - 1] & mask;
     }
 
@@ -318,7 +320,7 @@ int main()
 
     //      Отрицание NOT
     {
-      char str[20] = "111111111";
+      char str[20] = "000011111";
       size_t vector_cells;
       size_t bit_len = strlen(str);
 
